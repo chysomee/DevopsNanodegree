@@ -17,6 +17,30 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+  save_hello_world_output:
+    #add a file and persist to workspace
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          command: echo "text to output here" > output.txt
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - target/application.jar
+            - output.txt/*
+
+  print_output_file:
+#print output from job above
+
+    docker:
+      - image: cimg/base:stable
+    steps:
+      -run:
+          command: cat output.txt
+      - attach_workspace:
+          at: /tmp/workspace
+      
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -24,3 +48,5 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+      -save_hello_world_output
+      -print_output_file
