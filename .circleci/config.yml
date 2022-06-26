@@ -31,13 +31,13 @@ jobs:
 
   print_output_file:
 #print output from job above
-
     docker:
       - image: cimg/base:stable
     steps:
       - attach_workspace:
           at: ~/
-      - run: cat ~/output.txt
+      - run:
+          command: cat ~/output.txt
     
       
 
